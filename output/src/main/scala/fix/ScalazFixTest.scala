@@ -2,6 +2,7 @@ package fix
 
 import scalaz._
 import scalaz.syntax.std.either._
+import scalaz.std.option._
 
 trait ScalazFixTest {
   EitherT[Int, Option, String](None)
@@ -26,4 +27,6 @@ trait ScalazFixTest {
 
   \/-("a").toValidation
   -\/("b").toValidationNel
+
+  f1.toValidation
 }
