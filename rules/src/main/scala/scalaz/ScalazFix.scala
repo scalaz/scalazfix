@@ -83,6 +83,19 @@ class ScalazFix extends SemanticRule("ScalazFix") {
               Patch.empty
             }
         }
+      case x: Defn.Def
+          if List(
+            x.name.value == "tailrecM",
+            x.tparams.size == 2,
+            x.paramss.size == 2,
+            x.paramss.forall(_.size == 1)
+          ).forall(identity) =>
+        List(
+          Patch.addLeft(x.paramss(0).head.tokens.head, x.paramss(1).head.toString),
+          Patch.addLeft(x.paramss(1).head.tokens.head, x.paramss(0).head.toString),
+          Patch.removeTokens(x.paramss(0).flatMap(_.tokens.toList)),
+          Patch.removeTokens(x.paramss(1).flatMap(_.tokens.toList)),
+        ).asPatch
     }.asPatch
   }
 

@@ -37,4 +37,10 @@ trait ScalazFixTest {
   implicitly[Liskov[Int, Int]].substCt[({ type l[-a] = a => Int })#l](x => x)
 
   IList(1).tailMaybe.toOption
+
+  new BindRec[Maybe] {
+    override def tailrecM[A, B](a: A)(f: A => Maybe[A \/ B]): Maybe[B] = ???
+    override def bind[A, B](fa: Maybe[A])(f: A => Maybe[B]) = ???
+    override def map[A, B](fa: Maybe[A])(f: A => B) = ???
+  }
 }
