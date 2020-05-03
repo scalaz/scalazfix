@@ -4,6 +4,7 @@ rule = ScalazFix
 package fix
 
 import scalaz._
+import scalaz.syntax.std.either._
 
 trait ScalazFixTest {
   EitherT[Option, Int, String](None)
@@ -22,4 +23,7 @@ trait ScalazFixTest {
 
   NonEmptyList.nels(1, Seq(2, 3): _*)
   NonEmptyList.nels(4, 5, 6)
+
+  Right(3).validation
+  Left(4).disjunction
 }

@@ -57,6 +57,10 @@ class ScalazFix extends SemanticRule("ScalazFix") {
               s"NonEmptyList.nel(${x.args.head}, scalaz.IList(${x.args.tail.mkString(", ")}))"
             )
         }
+      case x: Term.Select if x.name.symbol.value == "scalaz/syntax/std/EitherOps#validation()." =>
+        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
+      case x: Term.Select if x.name.symbol.value == "scalaz/syntax/std/EitherOps#disjunction()." =>
+        Patch.replaceTree(x, x.copy(name = x.name.copy("toDisjunction")).toString)
     }.asPatch
   }
 

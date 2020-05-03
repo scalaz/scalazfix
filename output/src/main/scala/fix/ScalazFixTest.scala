@@ -1,6 +1,7 @@
 package fix
 
 import scalaz._
+import scalaz.syntax.std.either._
 
 trait ScalazFixTest {
   EitherT[Int, Option, String](None)
@@ -19,4 +20,7 @@ trait ScalazFixTest {
 
   NonEmptyList.fromSeq(1, Seq(2, 3))
   NonEmptyList.nel(4, scalaz.IList(5, 6))
+
+  Right(3).toValidation
+  Left(4).toDisjunction
 }
