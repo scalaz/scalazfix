@@ -46,4 +46,7 @@ trait ScalazFixTest {
     override def bind[A, B](fa: Maybe[A])(f: A => Maybe[B]) = ???
     override def map[A, B](fa: Maybe[A])(f: A => B) = ???
   }
+
+  Foldable[IList].msuml(IList.empty[Maybe[Int]])
+  Foldable[IList].msumlU(IList.empty[Maybe[Int]])
 }

@@ -17,6 +17,8 @@ object ReplaceDeprecatedMethod {
     ReplaceMethod("scalaz/Validation#disjunction().", "toDisjunction"),
     ReplaceMethod("scalaz/Coproduct#validation().", "toValidation"),
     ReplaceMethod("scalaz/Liskov#subst().", "substCt"),
+    ReplaceMethod("scalaz/Foldable#msuml().", "psum"),
+    ReplaceMethod("scalaz/FoldableParent#msumlU().", "psum"),
   )
 }
 
