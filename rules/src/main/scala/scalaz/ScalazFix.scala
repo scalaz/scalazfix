@@ -61,6 +61,10 @@ class ScalazFix extends SemanticRule("ScalazFix") {
         Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
       case x: Term.Select if x.name.symbol.value == "scalaz/syntax/std/EitherOps#disjunction()." =>
         Patch.replaceTree(x, x.copy(name = x.name.copy("toDisjunction")).toString)
+      case x: Term.Select if x.name.symbol.value == "scalaz/`\\/`#validationNel()." =>
+        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidationNel")).toString)
+      case x: Term.Select if x.name.symbol.value == "scalaz/`\\/`#validation()." =>
+        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
     }.asPatch
   }
 

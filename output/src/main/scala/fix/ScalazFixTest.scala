@@ -23,4 +23,7 @@ trait ScalazFixTest {
 
   Right(3).toValidation
   Left(4).toDisjunction
+
+  \/-("a").toValidation
+  -\/("b").toValidationNel
 }

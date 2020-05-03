@@ -26,4 +26,7 @@ trait ScalazFixTest {
 
   Right(3).validation
   Left(4).disjunction
+
+  \/-("a").validation
+  -\/("b").validationNel
 }
