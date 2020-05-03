@@ -35,4 +35,6 @@ trait ScalazFixTest {
   Coproduct.left[Option](List(8)).toValidation
 
   implicitly[Liskov[Int, Int]].substCt[({ type l[-a] = a => Int })#l](x => x)
+
+  IList(1).tailMaybe.toOption
 }

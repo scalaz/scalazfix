@@ -77,7 +77,11 @@ class ScalazFix extends SemanticRule("ScalazFix") {
           case Some(r) =>
             Patch.replaceTree(x, x.copy(name = x.name.copy(r.newMethod)).toString)
           case None =>
-            Patch.empty
+            if (x.name.symbol.value == "scalaz/IList#tailOption().") {
+              Patch.replaceTree(x, s"${x.qual}.tailMaybe.toOption")
+            } else {
+              Patch.empty
+            }
         }
     }.asPatch
   }
