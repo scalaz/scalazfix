@@ -36,4 +36,6 @@ trait ScalazFixTest {
   Success(true).disjunction
 
   Coproduct.left[Option](List(8)).validation
+
+  implicitly[Liskov[Int, Int]].subst[({ type l[-a] = a => Int })#l](x => x)
 }
