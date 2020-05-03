@@ -32,4 +32,6 @@ trait ScalazFixTest {
   -\/("b").validationNel
 
   f1.validation
+
+  Success(true).disjunction
 }
