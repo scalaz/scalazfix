@@ -23,6 +23,8 @@ object ReplaceDeprecatedMethod {
     ReplaceMethod("scalaz/FreeT#hoistM().", "hoist"),
     ReplaceMethod("scalaz/FreeT#interpretS().", "interpret"),
     ReplaceMethod("scalaz/FreeT#interpretT().", "interpret"),
+    ReplaceMethod("scalaz/std/BooleanFunctions#emptyOrPure().", "emptyOrPoint"),
+    ReplaceMethod("scalaz/std/BooleanFunctions#emptyOrPureNT().", "emptyOrPointNT"),
   )
 }
 

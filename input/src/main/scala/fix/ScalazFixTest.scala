@@ -58,4 +58,7 @@ trait ScalazFixTest {
     f.interpretS(NaturalTransformation.refl)
     f.interpretT(NaturalTransformation.refl)
   }
+
+  scalaz.std.boolean.emptyOrPure[Maybe, Int](true)(9)
+  scalaz.std.boolean.emptyOrPureNT[Maybe](false)
 }
