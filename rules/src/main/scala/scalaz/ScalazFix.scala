@@ -5,6 +5,21 @@ import scalafix.v1._
 import scala.meta.Term.ApplyType
 import scala.meta._
 
+final case class ReplaceMethod(symbol: String, newMethod: String)
+
+object ReplaceDeprecatedMethod {
+  val values: List[ReplaceMethod] = List(
+    ReplaceMethod("scalaz/syntax/std/EitherOps#validation().", "toValidation"),
+    ReplaceMethod("scalaz/syntax/std/EitherOps#disjunction().", "toDisjunction"),
+    ReplaceMethod("scalaz/`\\/`#validationNel().", "toValidationNel"),
+    ReplaceMethod("scalaz/`\\/`#validation().", "toValidation"),
+    ReplaceMethod("scalaz/EitherT#validation().", "toValidation"),
+    ReplaceMethod("scalaz/Validation#disjunction().", "toDisjunction"),
+    ReplaceMethod("scalaz/Coproduct#validation().", "toValidation"),
+    ReplaceMethod("scalaz/Liskov#subst().", "substCt"),
+  )
+}
+
 class ScalazFix extends SemanticRule("ScalazFix") {
 
   private[this] val monadTransSwitch3 = List(
@@ -57,22 +72,13 @@ class ScalazFix extends SemanticRule("ScalazFix") {
               s"NonEmptyList.nel(${x.args.head}, scalaz.IList(${x.args.tail.mkString(", ")}))"
             )
         }
-      case x: Term.Select if x.name.symbol.value == "scalaz/syntax/std/EitherOps#validation()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/syntax/std/EitherOps#disjunction()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toDisjunction")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/`\\/`#validationNel()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidationNel")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/`\\/`#validation()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/EitherT#validation()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/Validation#disjunction()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toDisjunction")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/Coproduct#validation()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("toValidation")).toString)
-      case x: Term.Select if x.name.symbol.value == "scalaz/Liskov#subst()." =>
-        Patch.replaceTree(x, x.copy(name = x.name.copy("substCt")).toString)
+      case x: Term.Select =>
+        ReplaceDeprecatedMethod.values.find(_.symbol == x.name.symbol.value) match {
+          case Some(r) =>
+            Patch.replaceTree(x, x.copy(name = x.name.copy(r.newMethod)).toString)
+          case None =>
+            Patch.empty
+        }
     }.asPatch
   }
 
