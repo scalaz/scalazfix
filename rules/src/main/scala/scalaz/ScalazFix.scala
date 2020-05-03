@@ -19,6 +19,10 @@ object ReplaceDeprecatedMethod {
     ReplaceMethod("scalaz/Liskov#subst().", "substCt"),
     ReplaceMethod("scalaz/Foldable#msuml().", "psum"),
     ReplaceMethod("scalaz/FoldableParent#msumlU().", "psum"),
+    ReplaceMethod("scalaz/FreeT#hoistN().", "hoist"),
+    ReplaceMethod("scalaz/FreeT#hoistM().", "hoist"),
+    ReplaceMethod("scalaz/FreeT#interpretS().", "interpret"),
+    ReplaceMethod("scalaz/FreeT#interpretT().", "interpret"),
   )
 }
 

@@ -46,4 +46,13 @@ trait ScalazFixTest {
 
   Foldable[IList].psum(IList.empty[Maybe[Int]])
   Foldable[IList].psum(IList.empty[Maybe[Int]])
+
+  {
+    val f = FreeT.point[Maybe, IList, Int](5)
+
+    f.hoist(NaturalTransformation.refl)
+    f.hoist(NaturalTransformation.refl)
+    f.interpret(NaturalTransformation.refl)
+    f.interpret(NaturalTransformation.refl)
+  }
 }
