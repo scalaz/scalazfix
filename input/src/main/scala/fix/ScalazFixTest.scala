@@ -34,4 +34,6 @@ trait ScalazFixTest {
   f1.validation
 
   Success(true).disjunction
+
+  Coproduct.left[Option](List(8)).validation
 }
