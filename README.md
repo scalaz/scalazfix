@@ -16,14 +16,12 @@ sbt shell
 
 ```
 > scalafixEnable
-> scalafix dependency:ScalazFix@org.scalaz:scalazfix:0.1.2
-> test:scalafix dependency:ScalazFix@org.scalaz:scalazfix:0.1.2
+> scalafixAll dependency:ScalazFix@org.scalaz:scalazfix:0.1.2
 ```
 
 ### apply snapshot version
 
 ```
 > scalafixEnable
-> scalafix https://raw.githubusercontent.com/scalaz/scalazfix/master/rules/src/main/scala/scalaz/ScalazFix.scala
-> test:scalafix https://raw.githubusercontent.com/scalaz/scalazfix/master/rules/src/main/scala/scalaz/ScalazFix.scala
+> scalafixAll https://raw.githubusercontent.com/scalaz/scalazfix/master/rules/src/main/scala/scalaz/ScalazFix.scala
 ```
