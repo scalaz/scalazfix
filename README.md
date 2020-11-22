@@ -1,7 +1,5 @@
 # scalaz migration
 
-[![Build Status](https://travis-ci.com/scalaz/scalazfix.svg?branch=master)](https://travis-ci.com/github/scalaz/scalazfix)
-
 <https://scalacenter.github.io/scalafix/docs/rules/external-rules.html>
 
 `project/scalafix.sbt`
