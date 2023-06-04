@@ -38,11 +38,11 @@ lazy val commonSettings = Def.settings(
       </scm>
   ),
   publishTo := sonatypePublishToBundle.value,
-  scalacOptions in (Compile, doc) ++= {
+  Compile / doc / scalacOptions ++= {
     val hash = sys.process.Process("git rev-parse HEAD").lineStream_!.head
     Seq(
       "-sourcepath",
-      (baseDirectory in LocalRootProject).value.getAbsolutePath,
+      (LocalRootProject / baseDirectory).value.getAbsolutePath,
       "-doc-source-url",
       s"https://github.com/scalaz/scalazfix/tree/${hash}€{FILE_PATH}.scala"
     )
@@ -75,7 +75,7 @@ lazy val commonSettings = Def.settings(
 )
 
 commonSettings
-skip in publish := true
+publish / skip := true
 
 lazy val rules = project.settings(
   commonSettings,
@@ -86,22 +86,22 @@ lazy val rules = project.settings(
 lazy val input = project.settings(
   commonSettings,
   libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.30", // scala-steward:off
-  skip in publish := true
+  publish / skip := true
 )
 
 lazy val output = project.settings(
   commonSettings,
   libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.7",
-  skip in publish := true
+  publish / skip := true
 )
 
 lazy val tests = project
   .settings(
     commonSettings,
-    skip in publish := true,
+    publish / skip := true,
     libraryDependencies += "ch.epfl.scala" % "scalafix-testkit" % V.scalafixVersion % Test cross CrossVersion.full,
-    compile in Compile :=
-      compile.in(Compile).dependsOn(compile.in(input, Compile)).value,
+    Compile / compile :=
+      (Compile / compile).dependsOn(compile.in(input, Compile)).value,
     scalafixTestkitOutputSourceDirectories :=
       sourceDirectories.in(output, Compile).value,
     scalafixTestkitInputSourceDirectories :=
