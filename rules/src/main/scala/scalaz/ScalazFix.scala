@@ -43,32 +43,33 @@ class ScalazFix extends SemanticRule("ScalazFix") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      case x: ApplyType if monadTransSwitch3ApplyType.contains(x.fun.symbol.value) && x.targs.size == 3 =>
-        val replaced = x.copy(targs = x.targs(1) :: x.targs(0) :: x.targs(2) :: Nil).toString
+      case x @ ApplyType.Initial(_, t1 :: t2 :: t3 :: Nil) if monadTransSwitch3ApplyType.contains(x.fun.symbol.value) =>
+        val replaced = x.copy(targs = t2 :: t1 :: t3 :: Nil).toString
         Patch.replaceTree(x, replaced)
-      case x: Type.Apply if monadTransSwitch3TypeApply.contains(x.tpe.symbol.value) && x.args.size == 3 =>
-        val replaced = x.copy(args = x.args(1) :: x.args(0) :: x.args(2) :: Nil).toString
+      case x @ Type.Apply.Initial(_, t1 :: t2 :: t3 :: Nil)
+          if monadTransSwitch3TypeApply.contains(x.tpe.symbol.value) =>
+        val replaced = x.copy(args = t2 :: t1 :: t3 :: Nil).toString
         Patch.replaceTree(x, replaced)
-      case x: Term.Apply if x.fun.symbol.value == "scalaz/BindRec#tailrecM()." && x.args.size == 1 =>
+      case x @ Term.Apply.Initial(_, x1 :: Nil) if x.fun.symbol.value == "scalaz/BindRec#tailrecM()." =>
         x.fun match {
-          case y: Term.Apply if x.fun.symbol.value == "scalaz/BindRec#tailrecM()." && y.args.size == 1 =>
+          case y @ Term.Apply.Initial(_, y1 :: Nil) if x.fun.symbol.value == "scalaz/BindRec#tailrecM()." =>
             Patch.replaceTree(
               x,
-              Term
-                .Apply(
-                  fun = Term.Apply(
+              Term.Apply
+                .Initial(
+                  fun = Term.Apply.Initial(
                     fun = y.fun,
-                    args = x.args
+                    args = x1 :: Nil
                   ),
-                  args = y.args
+                  args = y1 :: Nil
                 )
                 .toString
             )
           case _ =>
             Patch.empty
         }
-      case x: Term.Apply if x.fun.symbol.value == "scalaz/NonEmptyList.nels()." && x.args.size >= 2 =>
-        x.args.last match {
+      case x @ Term.Apply.Initial(_, args) if x.fun.symbol.value == "scalaz/NonEmptyList.nels()." && args.size >= 2 =>
+        args.last match {
           case y: Term.Repeated if x.args.size == 2 =>
             Patch.replaceTree(
               x,
