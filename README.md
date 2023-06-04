@@ -14,7 +14,7 @@ sbt shell
 
 ```
 > scalafixEnable
-> scalafixAll dependency:ScalazFix@org.scalaz:scalazfix:0.1.2
+> scalafixAll dependency:ScalazFix@org.scalaz:scalazfix:0.2.0
 ```
 
 ### apply snapshot version
