@@ -91,7 +91,7 @@ lazy val input = project.settings(
 
 lazy val output = project.settings(
   commonSettings,
-  libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.8",
+  libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.9",
   publish / skip := true
 )
 
