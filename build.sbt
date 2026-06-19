@@ -85,7 +85,7 @@ lazy val rules = project.settings(
 
 lazy val input = project.settings(
   commonSettings,
-  libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.30", // scala-steward:off
+  libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.36", // scala-steward:off
   publish / skip := true
 )
 
