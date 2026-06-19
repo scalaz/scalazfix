@@ -26,16 +26,16 @@ lazy val commonSettings = Def.settings(
   ),
   pomExtra := (
     <developers>
-        <developer>
-          <id>xuwei-k</id>
-          <name>Kenji Yoshida</name>
-          <url>https://github.com/xuwei-k</url>
-        </developer>
-      </developers>
-      <scm>
-        <url>git@github.com:scalaz/scalazfix.git</url>
-        <connection>scm:git:git@github.com:scalaz/scalazfix.git</connection>
-      </scm>
+      <developer>
+        <id>xuwei-k</id>
+        <name>Kenji Yoshida</name>
+        <url>https://github.com/xuwei-k</url>
+      </developer>
+    </developers>
+    <scm>
+      <url>git@github.com:scalaz/scalazfix.git</url>
+      <connection>scm:git:git@github.com:scalaz/scalazfix.git</connection>
+    </scm>
   ),
   publishTo := sonatypePublishToBundle.value,
   Compile / doc / scalacOptions ++= {
