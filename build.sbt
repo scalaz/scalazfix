@@ -101,13 +101,13 @@ lazy val tests = project
     publish / skip := true,
     libraryDependencies += "ch.epfl.scala" % "scalafix-testkit" % V.scalafixVersion % Test cross CrossVersion.full,
     Compile / compile :=
-      (Compile / compile).dependsOn(compile.in(input, Compile)).value,
+      (Compile / compile).dependsOn(input / Compile / compile).value,
     scalafixTestkitOutputSourceDirectories :=
-      sourceDirectories.in(output, Compile).value,
+      (output / Compile / sourceDirectories).value,
     scalafixTestkitInputSourceDirectories :=
-      sourceDirectories.in(input, Compile).value,
+      (input / Compile / sourceDirectories).value,
     scalafixTestkitInputClasspath :=
-      fullClasspath.in(input, Compile).value,
+      (input / Compile / fullClasspath).value,
   )
   .dependsOn(rules)
   .enablePlugins(ScalafixTestkitPlugin)
