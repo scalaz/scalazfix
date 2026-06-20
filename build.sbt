@@ -9,7 +9,6 @@ lazy val commonSettings = Def.settings(
   homepage := Some(url("https://github.com/scalaz/scalazfix")),
   licenses := Seq("MIT License" -> url("https://opensource.org/licenses/mit-license")),
   description := "scalafix rule for scalaz",
-  addCompilerPlugin(scalafixSemanticdb),
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -39,7 +38,7 @@ lazy val commonSettings = Def.settings(
   ),
   publishTo := (if (isSnapshot.value) None else localStaging.value),
   Compile / doc / scalacOptions ++= {
-    val hash = sys.process.Process("git rev-parse HEAD").lineStream_!.head
+    val hash = sys.process.Process("git rev-parse HEAD").lazyLines_!.head
     Seq(
       "-sourcepath",
       (LocalRootProject / baseDirectory).value.getAbsolutePath,
@@ -67,15 +66,18 @@ lazy val commonSettings = Def.settings(
     .toList
     .flatten,
   scalacOptions ++= List(
+    "-release:8",
     "-deprecation",
     "-unchecked",
     "-Yrangepos",
-    "-P:semanticdb:synthetics:on"
   )
 )
 
-commonSettings
-publish / skip := true
+val scalazfixRoot = rootProject.autoAggregate.settings(
+  commonSettings,
+  autoScalaLibrary := false,
+  publish / skip := true
+)
 
 lazy val rules = projectMatrix
   .defaultAxes(VirtualAxis.jvm)
@@ -91,6 +93,8 @@ lazy val input = projectMatrix
   .jvmPlatform(scalaVersions)
   .settings(
     commonSettings,
+    addCompilerPlugin(scalafixSemanticdb),
+    scalacOptions += "-P:semanticdb:synthetics:on",
     libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.36", // scala-steward:off
     publish / skip := true
   )
@@ -110,9 +114,10 @@ lazy val tests = projectMatrix
   .settings(
     commonSettings,
     publish / skip := true,
-    libraryDependencies += "ch.epfl.scala" % "scalafix-testkit" % V.scalafixVersion % Test cross CrossVersion.full,
-    Compile / compile :=
-      (Compile / compile).dependsOn(Def.taskDyn { input.jvm(scalaVersion.value) / Compile / compile }).value,
+    libraryDependencies += ("ch.epfl.scala" % "scalafix-testkit" % V.scalafixVersion % Test).cross(CrossVersion.full),
+    Compile / compile := Def.uncached(
+      (Compile / compile).dependsOn(Def.taskDyn { input.jvm(scalaVersion.value) / Compile / compile }).value
+    ),
     scalafixTestkitOutputSourceDirectories :=
       Def.taskDyn {
         val p = output.jvm(scalaVersion.value)
