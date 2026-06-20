@@ -68,17 +68,23 @@ class ScalazFix extends SemanticRule("ScalazFix") {
           case _ =>
             Patch.empty
         }
-      case x @ Term.Apply.Initial(_, args) if x.fun.symbol.value == "scalaz/NonEmptyList.nels()." && args.size >= 2 =>
+      case x @ Term.Apply.After_4_6_0(
+            fun,
+            Term.ArgClause(
+              args,
+              _
+            )
+          ) if fun.symbol.value == "scalaz/NonEmptyList.nels()." && args.size >= 2 =>
         args.last match {
-          case y: Term.Repeated if x.args.size == 2 =>
+          case y: Term.Repeated if args.size == 2 =>
             Patch.replaceTree(
               x,
-              s"NonEmptyList.fromSeq(${x.args.head}, ${y.expr})"
+              s"NonEmptyList.fromSeq(${args.head}, ${y.expr})"
             )
           case _ =>
             Patch.replaceTree(
               x,
-              s"NonEmptyList.nel(${x.args.head}, scalaz.IList(${x.args.tail.mkString(", ")}))"
+              s"NonEmptyList.nel(${args.head}, scalaz.IList(${args.tail.mkString(", ")}))"
             )
         }
       case x: Term.Select =>
@@ -92,18 +98,34 @@ class ScalazFix extends SemanticRule("ScalazFix") {
               Patch.empty
             }
         }
-      case x: Defn.Def
-          if List(
-            x.name.value == "tailrecM",
-            x.tparams.size == 2,
-            x.paramss.size == 2,
-            x.paramss.forall(_.size == 1)
-          ).forall(identity) =>
+      case x @ Defn.Def.After_4_7_3(
+            _,
+            Term.Name("tailrecM"),
+            List(
+              Member.ParamClauseGroup(
+                Type.ParamClause(
+                  _ :: _ :: Nil
+                ),
+                List(
+                  Term.ParamClause(
+                    p1 :: Nil,
+                    _
+                  ),
+                  Term.ParamClause(
+                    p2 :: Nil,
+                    _
+                  )
+                )
+              )
+            ),
+            _,
+            _
+          ) =>
         List(
-          Patch.addLeft(x.paramss(0).head.tokens.head, x.paramss(1).head.toString),
-          Patch.addLeft(x.paramss(1).head.tokens.head, x.paramss(0).head.toString),
-          Patch.removeTokens(x.paramss(0).flatMap(_.tokens.toList)),
-          Patch.removeTokens(x.paramss(1).flatMap(_.tokens.toList)),
+          Patch.addLeft(p1.tokens.head, p2.toString),
+          Patch.addLeft(p2.tokens.head, p1.toString),
+          Patch.removeTokens(p1.tokens),
+          Patch.removeTokens(p2.tokens),
         ).asPatch
     }.asPatch
   }
