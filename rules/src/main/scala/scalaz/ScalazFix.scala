@@ -43,11 +43,16 @@ class ScalazFix extends SemanticRule("ScalazFix") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      case x @ ApplyType.Initial(_, t1 :: t2 :: t3 :: Nil) if monadTransSwitch3ApplyType.contains(x.fun.symbol.value) =>
+      case x @ ApplyType.After_4_6_0(
+            _,
+            Type.ArgClause(t1 :: t2 :: t3 :: Nil)
+          ) if monadTransSwitch3ApplyType.contains(x.fun.symbol.value) =>
         val replaced = x.copy(targs = t2 :: t1 :: t3 :: Nil).toString
         Patch.replaceTree(x, replaced)
-      case x @ Type.Apply.Initial(_, t1 :: t2 :: t3 :: Nil)
-          if monadTransSwitch3TypeApply.contains(x.tpe.symbol.value) =>
+      case x @ Type.Apply.After_4_6_0(
+            _,
+            Type.ArgClause(t1 :: t2 :: t3 :: Nil)
+          ) if monadTransSwitch3TypeApply.contains(x.tpe.symbol.value) =>
         val replaced = x.copy(args = t2 :: t1 :: t3 :: Nil).toString
         Patch.replaceTree(x, replaced)
       case x @ Term.Apply.Initial(_, x1 :: Nil) if x.fun.symbol.value == "scalaz/BindRec#tailrecM()." =>
