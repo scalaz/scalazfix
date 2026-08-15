@@ -6,8 +6,8 @@ val scalaVersions = Seq(V.scala213, V.scala212)
 
 lazy val commonSettings = Def.settings(
   organization := "org.scalaz",
-  homepage := Some(url("https://github.com/scalaz/scalazfix")),
-  licenses := Seq("MIT License" -> url("https://opensource.org/licenses/mit-license")),
+  homepage := Some(uri("https://github.com/scalaz/scalazfix")),
+  licenses := Seq("MIT License" -> uri("https://opensource.org/licenses/mit-license")),
   description := "scalafix rule for scalaz",
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
